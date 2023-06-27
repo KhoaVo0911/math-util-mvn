@@ -1,0 +1,33 @@
+
+name: Math Utility Repo Using Maven, JUbit and Ci(with GitHub Actions) | © 2023 KhoaVo-0911
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 8.0 - Nhờ server Mỹ cài giùm
+      uses: actions/setup-java@v3
+      with:
+        java-version: '1.8'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven - Biên dịch, chạy Unit Test xanh đỏ, nhận về .jar hoặc email chửi
+      run: mvn -B package --file pom.xml
+      
+    - name: Distribute jar-war file # Gửi file .jar .war đi đâu, CD nhảy vào ...
+      run: mkdir staging && cp target/*.jar staging # tạo thư mục staging chứa file .jar .war sau khi build      
+     
+    - name: Make hyperlink to jar-war file # Tạo hyperlink để download build 
+      uses: actions/upload-artifact@v1
+      with:
+          name: moi-nha-tuyen-dung-download-jar.zip #Tạo hyperLink để download file .jar .war
+          path: staging
